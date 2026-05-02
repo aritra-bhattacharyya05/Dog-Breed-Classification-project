@@ -1,6 +1,7 @@
 streamlit>=1.40.0
 tensorflow==2.19.0
 tensorflow-hub==0.16.1
+setuptools
 pillow==10.0.0
 numpy==1.26.4
 pandas==2.3.3
