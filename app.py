@@ -141,6 +141,6 @@ else:
 
 st.divider()
 st.markdown(
-    "<div style='text-align:center;color:gray;'>Made with ❤️ using TensorFlow & Streamlit</div>",
+    "<div style='text-align:center;color:gray;'>MobileNetV2 Transfer Learning Model</div>",
     unsafe_allow_html=True
 )
