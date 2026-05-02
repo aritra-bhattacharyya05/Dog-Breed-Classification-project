@@ -1,5 +1,7 @@
 import os
 
+os.environ["TF_USE_LEGACY_KERAS"] = "1"
+
 # Suppress TensorFlow warnings
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
@@ -52,6 +54,7 @@ BREEDS = [
     "wire-haired_fox_terrier","yorkshire_terrier",
 ]
 
+
 @st.cache_resource
 def load_model():
     try:
@@ -78,6 +81,7 @@ def preprocess_image(image):
     img_array = np.expand_dims(img_array, axis=0)
     return img_array
 
+
 st.title("🐶 Dog Breed Classifier")
 st.markdown("Upload a dog photo and I'll identify the breed!")
 st.divider()
@@ -89,8 +93,7 @@ if model is None:
 
 uploaded_file = st.file_uploader(
     "📸 Upload a dog image",
-    type=["jpg", "jpeg", "png", "gif", "webp"],
-    help="JPG, PNG, GIF, or WebP format."
+    type=["jpg", "jpeg", "png", "gif", "webp"]
 )
 
 if uploaded_file is not None:
@@ -117,7 +120,6 @@ if uploaded_file is not None:
         st.markdown(f"**Confidence: {top_confidence:.1f}%**")
         st.progress(top_confidence / 100.0)
 
-
     st.divider()
     st.subheader("🏆 Top 5 Predictions")
 
@@ -135,13 +137,7 @@ if uploaded_file is not None:
     st.table(df)
 
 else:
-    st.info("""
-    ### 💡 Tips
-    - Use clear images
-    - Show full dog or face
-    - Works best for pure breeds
-    """)
-
+    st.info("Upload an image to get started.")
 
 st.divider()
 st.markdown(
