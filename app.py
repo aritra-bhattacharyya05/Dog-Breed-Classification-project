@@ -1,23 +1,14 @@
 import os
-import sys
 
 # Suppress TensorFlow warnings
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
-try:
-    import streamlit as st
-    import numpy as np
-    from PIL import Image
-    import pandas as pd
-    import tensorflow as tf
-    from tensorflow_hub import KerasLayer   # ✅ FIXED IMPORT
-    TF_AVAILABLE = True
-except Exception as e:
-    TF_AVAILABLE = False
-    import streamlit as st
-    st.error("⚠️ TensorFlow not available locally")
-    st.info("This app will work perfectly when deployed to Streamlit Cloud.")
-    st.stop()
+import streamlit as st
+import numpy as np
+from PIL import Image
+import pandas as pd
+import tensorflow as tf
+from tensorflow_hub import KerasLayer
 
 st.set_page_config(
     page_title="🐶 Dog Breed Classifier",
@@ -71,13 +62,14 @@ def load_model():
 
         model = tf.keras.models.load_model(
             model_path,
-            custom_objects={'KerasLayer': KerasLayer}   
+            custom_objects={'KerasLayer': KerasLayer}
         )
+
         return model
 
     except Exception as e:
         st.error(f"❌ Failed to load model: {e}")
-        st.write("Files present:", os.listdir(os.path.dirname(__file__))) 
+        st.write("📂 Files in directory:", os.listdir(os.path.dirname(__file__)))
         return None
 
 def preprocess_image(image):
@@ -97,17 +89,21 @@ if model is None:
 
 uploaded_file = st.file_uploader(
     "📸 Upload a dog image",
-    type=["jpg", "jpeg", "png", "gif", "webp"]
+    type=["jpg", "jpeg", "png", "gif", "webp"],
+    help="JPG, PNG, GIF, or WebP format."
 )
 
 if uploaded_file is not None:
     col1, col2 = st.columns(2)
 
     with col1:
+        st.subheader("Your Image")
         image = Image.open(uploaded_file).convert('RGB')
         st.image(image, use_column_width=True)
 
     with col2:
+        st.subheader("Result")
+
         processed_img = preprocess_image(image)
         predictions = model.predict(processed_img, verbose=0)
 
@@ -120,6 +116,7 @@ if uploaded_file is not None:
         st.markdown(f"## {top_breed}")
         st.markdown(f"**Confidence: {top_confidence:.1f}%**")
         st.progress(top_confidence / 100.0)
+
 
     st.divider()
     st.subheader("🏆 Top 5 Predictions")
@@ -138,7 +135,13 @@ if uploaded_file is not None:
     st.table(df)
 
 else:
-    st.info("Upload an image to get started.")
+    st.info("""
+    ### 💡 Tips
+    - Use clear images
+    - Show full dog or face
+    - Works best for pure breeds
+    """)
+
 
 st.divider()
 st.markdown(
